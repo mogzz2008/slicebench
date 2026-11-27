@@ -212,11 +212,13 @@ h1 em {
   color: var(--paper-dim);
 }
 .versus-num, .slice-num, .value-num {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
+  font-weight: 650;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   margin: 6px 0 2px;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "ss01" 0;
 }
 .versus-sub, .slice-sub { margin: 0; color: var(--paper-dim); font-size: 0.88rem; }
 .versus-vs {
@@ -255,7 +257,7 @@ h1 em {
   text-align: center;
 }
 .dial-core span { font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--paper-dim); }
-.dial-core strong { font-family: var(--font-mono); font-size: 1.25rem; margin-top: 2px; }
+.dial-core strong { font-family: var(--font-body); font-weight: 650; font-size: 1.25rem; margin-top: 2px; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
 .hero-footnote { grid-column: 1 / -1; margin: 8px 0 0; color: var(--paper-dim); position: relative; z-index: 1; }
 
 .presets { padding: 12px 0 28px; }
@@ -421,10 +423,13 @@ output { font-family: var(--font-mono); min-width: 3.4em; text-align: right; col
   background: var(--bench);
 }
 .lab-delta {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
+  font-weight: 650;
   font-size: 1.4rem;
   margin: 6px 0;
   color: var(--rose);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
 }
 .lab-delta.is-up { color: var(--teal); }
 .lab-copy { margin: 0 0 10px; color: var(--paper-dim); font-size: 0.88rem; }
