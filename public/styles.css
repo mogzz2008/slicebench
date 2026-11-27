@@ -414,6 +414,16 @@ output { font-family: var(--font-mono); min-width: 3.4em; text-align: right; col
 .value-grid > div { padding: 10px; border-radius: 12px; background: var(--bench); border: 1px solid var(--line); }
 .value-grid > div.is-win { border-color: rgba(58, 215, 184, 0.45); }
 .break-even { margin: 12px 0 0; color: var(--paper-dim); }
+.exit-field { margin: 8px 0 0; }
+.exit-field span { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.exit-field input {
+  width: 100%;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+.lab .insights { margin: 0 0 12px; }
+.lab.is-featured-story [data-testid="lab-heading"] { color: var(--teal); }
+
 
 .lab-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .lab-card {

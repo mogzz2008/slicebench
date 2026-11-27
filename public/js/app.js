@@ -2,6 +2,7 @@ import { project, compareFocus } from './core/captable.js';
 import { defaultModel, getPreset, labVariants, DEFAULT_PRESET_ID } from './core/presets.js';
 import { applyHash, encodeState, shareUrl, toState } from './core/share.js';
 import { formatMoney, formatPercent, formatShares } from './core/format.js';
+import { featuredLabStory } from './core/labstory.js';
 import { loadMutePreference, setMuted, isMuted, blip, whoosh, chime, tick, warn } from './audio.js';
 
 const ROLE_COLOR = {
@@ -256,6 +257,11 @@ function render(projection, { sound = false } = {}) {
   animateNumber($('[data-testid="paper-conservative"]'), focus.values.conservative, (n) => formatMoney(n));
   animateNumber($('[data-testid="paper-base"]'), focus.values.base, (n) => formatMoney(n));
   animateNumber($('[data-testid="paper-breakout"]'), focus.values.breakout, (n) => formatMoney(n));
+  const exits = model.exits || {};
+  const label = (name, value) => `${name} · ${formatMoney(value)} exit`;
+  $('[data-testid="exit-label-conservative"]').textContent = label('Conservative', exits.conservative);
+  $('[data-testid="exit-label-base"]').textContent = label('Base', exits.base);
+  $('[data-testid="exit-label-breakout"]').textContent = label('Breakout', exits.breakout);
 
   const be = $('[data-testid="break-even"]');
   if (focus.breakEven) {
@@ -276,6 +282,10 @@ function render(projection, { sound = false } = {}) {
 
   const list = $('[data-testid="insights"]');
   list.innerHTML = insights.map((i) => `<li data-testid="insight-${i.code}"><strong>${escapeHtml(i.title)}</strong>${escapeHtml(i.body)}</li>`).join('');
+  const story = featuredLabStory(insights);
+  $('[data-testid="lab-heading"]').textContent = story.heading;
+  $('[data-testid="lab-lead"]').textContent = story.lead;
+  $('#lab').classList.toggle('is-featured-story', Boolean(story.featured));
 
   renderLab();
   $('#field-pool-out').textContent = `${Number($('#field-pool').value).toFixed(1).replace(/\.0$/, '')}%`;

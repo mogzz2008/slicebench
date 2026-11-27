@@ -188,6 +188,9 @@ const h = {
   waitForText: async (sel, text, timeout = 8000) => {
     await page.waitForFunction((s, needle) => (document.querySelector(s)?.textContent || '').includes(needle), { timeout }, sel, text);
   },
+  waitForValue: async (sel, value, timeout = 8000) => {
+    await page.waitForFunction((s, v) => document.querySelector(s)?.value === v, { timeout }, sel, String(value));
+  },
   scrollPanel: async (sel, panel = '[data-testid="results"]', pad = 32) => {
     await page.$eval(sel, (n, panelSel, padPx) => {
       const col = document.querySelector(panelSel);

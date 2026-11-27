@@ -178,26 +178,14 @@
           </article>
 
           <article class="panel" data-testid="panel-exits">
-            <h3>Paper value &amp; the job you didn't take</h3>
+            <h3>The job you didn't take</h3>
             <div class="field-grid">
-              <label class="field">
-                <span>Conservative exit ($)</span>
-                <input type="number" id="field-exit-conservative" data-testid="field-exit-conservative" min="0" step="1000000" value="40000000">
-              </label>
-              <label class="field">
-                <span>Base exit ($)</span>
-                <input type="number" id="field-exit-base" data-testid="field-exit-base" min="0" step="1000000" value="150000000">
-              </label>
-              <label class="field">
-                <span>Breakout exit ($)</span>
-                <input type="number" id="field-exit-breakout" data-testid="field-exit-breakout" min="0" step="1000000" value="800000000">
-              </label>
               <label class="field">
                 <span>Four-year cash gap ($)</span>
                 <input type="number" id="field-salary" data-testid="field-salary" min="0" step="10000" value="400000">
               </label>
             </div>
-            <p class="hint">The cash gap is the extra salary and bonus you might give up versus another job. Paper value ignores taxes, preferences, and exercise cost — it is a comparison tool, not a payday.</p>
+            <p class="hint">The cash gap is the extra salary and bonus you might give up versus another job. Paper value ignores taxes, preferences, and exercise cost — it is a comparison tool, not a payday. Exit valuations live next to the paper values they produce.</p>
           </article>
         </div>
 
@@ -227,28 +215,41 @@
             </div>
           </article>
 
-          <article class="panel values-panel">
+          <article class="panel values-panel" data-testid="panel-paper">
             <h3>What the slice is worth on paper</h3>
             <div class="value-grid">
               <div>
-                <p class="value-kicker">Conservative</p>
-                <p class="value-num" data-testid="paper-conservative">$13.9M</p>
+                <p class="value-kicker" data-testid="exit-label-conservative">Conservative · $40M exit</p>
+                <p class="value-num" data-testid="paper-conservative">$13.94M</p>
+                <label class="field exit-field">
+                  <span>Conservative exit ($)</span>
+                  <input type="number" id="field-exit-conservative" data-testid="field-exit-conservative" min="0" step="1000000" value="40000000">
+                </label>
               </div>
               <div class="is-win">
-                <p class="value-kicker">Base</p>
-                <p class="value-num" data-testid="paper-base">$52.3M</p>
+                <p class="value-kicker" data-testid="exit-label-base">Base · $150M exit</p>
+                <p class="value-num" data-testid="paper-base">$52.27M</p>
+                <label class="field exit-field">
+                  <span>Base exit ($)</span>
+                  <input type="number" id="field-exit-base" data-testid="field-exit-base" min="0" step="1000000" value="150000000">
+                </label>
               </div>
               <div>
-                <p class="value-kicker">Breakout</p>
-                <p class="value-num" data-testid="paper-breakout">$279M</p>
+                <p class="value-kicker" data-testid="exit-label-breakout">Breakout · $800M exit</p>
+                <p class="value-num" data-testid="paper-breakout">$278.8M</p>
+                <label class="field exit-field">
+                  <span>Breakout exit ($)</span>
+                  <input type="number" id="field-exit-breakout" data-testid="field-exit-breakout" min="0" step="1000000" value="800000000">
+                </label>
               </div>
             </div>
             <p class="break-even" data-testid="break-even"></p>
           </article>
 
-          <article class="panel lab" data-testid="lab">
-            <h3>What we tested</h3>
-            <p class="hint">Two edits we ran on this same deal, live. They do not change your bench until you apply one.</p>
+          <article class="panel lab" id="lab" data-testid="lab">
+            <h3 data-testid="lab-heading">What we tested</h3>
+            <p class="hint" data-testid="lab-lead">Two edits we ran on this same deal, live. They do not change your bench until you apply one.</p>
+            <ul class="insights" data-testid="insights"></ul>
             <div class="lab-grid">
               <div class="lab-card">
                 <h4>Pool +5 points</h4>
@@ -266,7 +267,6 @@
           </article>
 
           <div class="warnings" data-testid="warnings" hidden></div>
-          <ul class="insights" data-testid="insights"></ul>
         </div>
       </div>
     </section>

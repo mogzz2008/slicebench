@@ -57,10 +57,12 @@ export const scenes = [
         text: 'The slice, the ownership stack, and the paper values all move together. At a one hundred fifty million dollar exit, this slice is worth fifty-two point two seven million on paper.',
         act: async (h) => {
           await h.caption('Base exit $150M → paper value $52.27M');
-          await h.eval(() => document.querySelector('[data-testid="paper-base"]')?.scrollIntoView({ block: 'center' }));
+          await h.eval(() => document.querySelector('[data-testid="panel-paper"]')?.scrollIntoView({ block: 'center' }));
           await h.sleep(350);
+          await h.waitForValue('[data-testid="field-exit-base"]', '150000000');
+          await h.waitForText('[data-testid="exit-label-base"]', '$150M');
           await h.waitForText('[data-testid="paper-base"]', '52.27');
-          await h.hover('[data-testid="paper-base"]');
+          await h.hover('[data-testid="field-exit-base"]');
         },
       },
     ],
@@ -95,7 +97,7 @@ export const scenes = [
     id: 'lab',
     segs: [
       {
-        text: 'Before we shipped, we tested two edits on this same deal: raise the pool five more points, or raise two million more in cash.',
+        text: 'Next, we ran two live deal edits on this same bench: raise the pool five more points, or raise two million more in cash.',
         act: async (h) => {
           await h.caption('What we tested: pool +5 points, or raise $2M more');
           await h.eval(() => document.querySelector('[data-testid="lab"]')?.scrollIntoView({ block: 'center' }));
@@ -141,12 +143,16 @@ export const scenes = [
       {
         text: 'Leave before the cliff, and the grant goes to zero.',
         act: async (h) => {
-          await h.caption('Leave at month 8 · 0.00% vested');
           await h.eval(() => document.querySelector('[data-testid="field-leave"]')?.scrollIntoView({ block: 'center' }));
           await h.sleep(200);
           await h.type('[data-testid="field-leave"]', '8', 90);
           await h.eval(() => document.activeElement?.blur());
           await h.waitForSlice('0.00');
+          await h.waitForText('[data-testid="lab-heading"]', 'Leaving before the cliff');
+          await h.caption('Leave at month 8 · 0.00% vested');
+          await h.eval(() => document.querySelector('[data-testid="lab"]')?.scrollIntoView({ block: 'center' }));
+          await h.sleep(280);
+          await h.hover('[data-testid="lab-heading"]');
         },
       },
     ],

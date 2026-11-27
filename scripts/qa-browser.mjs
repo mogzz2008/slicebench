@@ -96,6 +96,26 @@ ok('YC founder slice is in the mid-30s', (() => {
   return n > 30 && n < 40;
 })(), ycSlice);
 
+const ycExits = await page.evaluate(() => ({
+  conservative: document.querySelector('[data-testid="field-exit-conservative"]').value,
+  base: document.querySelector('[data-testid="field-exit-base"]').value,
+  breakout: document.querySelector('[data-testid="field-exit-breakout"]').value,
+  labelC: document.querySelector('[data-testid="exit-label-conservative"]').textContent.trim(),
+  labelB: document.querySelector('[data-testid="exit-label-base"]').textContent.trim(),
+  labelX: document.querySelector('[data-testid="exit-label-breakout"]').textContent.trim(),
+  paperC: document.querySelector('[data-testid="paper-conservative"]').textContent.trim(),
+  paperB: document.querySelector('[data-testid="paper-base"]').textContent.trim(),
+  paperX: document.querySelector('[data-testid="paper-breakout"]').textContent.trim(),
+}));
+ok('YC conservative exit input is $40M', ycExits.conservative === '40000000', ycExits.conservative);
+ok('YC base exit input is $150M', ycExits.base === '150000000', ycExits.base);
+ok('YC breakout exit input is $800M', ycExits.breakout === '800000000', ycExits.breakout);
+ok('YC conservative label names the $40M exit', ycExits.labelC.includes('$40M'), ycExits.labelC);
+ok('YC base label names the $150M exit', ycExits.labelB.includes('$150M'), ycExits.labelB);
+ok('YC breakout label names the $800M exit', ycExits.labelX.includes('$800M'), ycExits.labelX);
+ok('YC paper values match 34.85% of those exits', ycExits.paperC === '$13.94M' && ycExits.paperB === '$52.27M' && ycExits.paperX === '$278.8M', JSON.stringify(ycExits));
+ok('lab heading starts as What we tested', (await page.$eval('[data-testid="lab-heading"]', (el) => el.textContent.trim())) === 'What we tested');
+
 const anim = await page.$eval('.versus-card', (el) => getComputedStyle(el).animationName);
 ok('hero cards have a pop-in animation (or none if reduced motion)', typeof anim === 'string' && anim.length > 0);
 const stackTransition = await page.$eval('[data-testid="stack"] span', (el) => getComputedStyle(el).transitionProperty);
@@ -130,6 +150,7 @@ await fill('[data-testid="field-leave"]', '8');
 await page.waitForFunction(() => Number(document.querySelector('[data-testid="slice-percent"]')?.dataset.value) === 0, { timeout: 5000 });
 ok('leaving before the cliff drives the vested slice to 0%', (await sliceValue()) === 0, await sliceText());
 ok('cliff-zero insight appears', await page.$('[data-testid="insight-cliff-zero"]'));
+ok('lab heading updates to Leaving before the cliff', (await page.$eval('[data-testid="lab-heading"]', (el) => el.textContent.trim())) === 'Leaving before the cliff');
 
 await clickSel('[data-testid="preset-yc"]');
 await page.waitForFunction(() => Number(document.querySelector('[data-testid="slice-percent"]')?.dataset.value) > 0.30, { timeout: 5000 });
