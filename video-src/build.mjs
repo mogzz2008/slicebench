@@ -36,7 +36,7 @@ for (const s of scenes) {
     parts.push(seg);
     t += seg.d + GAP;
   }
-  const holds = { title: 1.2, hook: 2, product: 2, shuffle: 2, lab: 1.5, employee: 2, trust: 1.5, end: 3.5 };
+  const holds = { title: 1.2, hook: 2, product: 1, shuffle: 1, lab: 0.8, employee: 2.4, trust: 1.5, end: 3.5 };
   s.total = +(t - GAP + TAIL + (holds[s.id] || 0)).toFixed(3);
   const inputs = parts.flatMap((p) => ['-i', p.mp3]);
   const filt = parts.map((p, i) => `[${i}:a]aresample=48000,aformat=channel_layouts=stereo,adelay=${Math.round(p.at * 1000)}|${Math.round(p.at * 1000)}[a${i}]`).join(';')
