@@ -1,0 +1,8 @@
+01-hero-desktop.png
+02-workspace-desktop.png
+03-results-desktop.png
+04-shuffle-desktop.png
+05-employee-desktop.png
+06-method-desktop.png
+07-hero-mobile.png
+08-workspace-mobile.png

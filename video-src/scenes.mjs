@@ -71,11 +71,12 @@ export const scenes = [
       {
         text: 'Now the messy term sheet. Four founders, and a seed that demands a twenty percent option pool.',
         act: async (h) => {
-          await h.caption('Maya · 38.00% in the garage → 20.86% after the seed');
-          await h.scrollTo('.presets', -72, 600);
+          await h.caption('Four founders, and a seed that demands a 20% option pool');
+          await h.scrollTo('.presets', -72, 500);
           await h.click('[data-testid="preset-shuffle"]');
           await h.waitForSlice('20.86');
-          await h.scrollTo('#workspace', 0, 800);
+          await h.caption('Maya · 38.00% in the garage → 20.86% after the seed');
+          await h.scrollTo('#workspace', 0, 700);
         },
       },
       {
@@ -121,11 +122,12 @@ export const scenes = [
       {
         text: 'If you are joining, not founding, load the employee preset.',
         act: async (h) => {
-          await h.caption('Your grant · 0.20% issued · 0.08% vested at month 18');
-          await h.scrollTo('.presets', -72, 600);
+          await h.caption('If you are joining, not founding');
+          await h.scrollTo('.presets', -72, 500);
           await h.click('[data-testid="preset-employee"]');
           await h.waitForSlice('0.08');
-          await h.scrollTo('#workspace', 0, 800);
+          await h.caption('Your grant · 0.20% issued · 0.08% vested at month 18');
+          await h.scrollTo('#workspace', 0, 700);
         },
       },
       {
@@ -163,8 +165,9 @@ export const scenes = [
       {
         text: 'Nothing is uploaded. Copy a share link, download the numbers, or print a one-pager.',
         act: async (h) => {
-          await h.caption('Private by design. No account. No server.');
           await h.click('[data-testid="sources-close"]');
+          await h.sleep(200);
+          await h.caption('Private by design. No account. No server.');
           await h.scrollTo('.bench-head', -8, 700);
           await h.hover('[data-testid="share-copy"]');
         },

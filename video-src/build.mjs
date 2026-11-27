@@ -171,12 +171,9 @@ const h = {
   waitForSlice: async (label, timeout = 8000) => {
     await page.waitForFunction((needle) => {
       const el = document.querySelector('[data-testid="slice-percent"]');
-      if (!el) return false;
-      if ((el.textContent || '').includes(needle)) return true;
-      const v = Number(el.dataset.value);
-      const target = parseFloat(needle);
-      return Number.isFinite(v) && Number.isFinite(target) && Math.abs(v * 100 - target) < 0.02;
+      return Boolean(el && (el.textContent || '').includes(needle));
     }, { timeout }, label);
+    await sleep(200);
   },
   quickClick: async (sel) => {
     await page.waitForSelector(sel, { visible: true, timeout: 5000 });
