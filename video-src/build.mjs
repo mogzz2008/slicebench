@@ -36,9 +36,8 @@ for (const s of scenes) {
     parts.push(seg);
     t += seg.d + GAP;
   }
-  s.total = +(t - GAP + TAIL).toFixed(3);
-  if (s.id === 'end') s.total += 2.0;
-  if (s.id === 'title') s.total += 0.4;
+  const holds = { title: 1.2, hook: 2, product: 2, shuffle: 2, lab: 1.5, employee: 2, trust: 1.5, end: 3.5 };
+  s.total = +(t - GAP + TAIL + (holds[s.id] || 0)).toFixed(3);
   const inputs = parts.flatMap((p) => ['-i', p.mp3]);
   const filt = parts.map((p, i) => `[${i}:a]aresample=48000,aformat=channel_layouts=stereo,adelay=${Math.round(p.at * 1000)}|${Math.round(p.at * 1000)}[a${i}]`).join(';')
     + `;${parts.map((_, i) => `[a${i}]`).join('')}amix=inputs=${parts.length}:normalize=0,apad,atrim=0:${s.total}[out]`;
@@ -161,10 +160,23 @@ const h = {
     await glide(c.x, c.y, 700);
   },
   click: async (sel) => {
+    await page.waitForSelector(sel, { timeout: 5000 });
+    await page.$eval(sel, (n) => n.scrollIntoView({ block: 'center', inline: 'nearest' }));
+    await sleep(180);
     const c = await center(sel);
-    await glide(c.x, c.y, 550);
-    await page.mouse.click(c.x, c.y);
-    await sleep(250);
+    await glide(c.x, Math.max(80, c.y), 550);
+    await page.$eval(sel, (n) => n.click());
+    await sleep(280);
+  },
+  waitForSlice: async (label, timeout = 8000) => {
+    await page.waitForFunction((needle) => {
+      const el = document.querySelector('[data-testid="slice-percent"]');
+      if (!el) return false;
+      if ((el.textContent || '').includes(needle)) return true;
+      const v = Number(el.dataset.value);
+      const target = parseFloat(needle);
+      return Number.isFinite(v) && Number.isFinite(target) && Math.abs(v * 100 - target) < 0.02;
+    }, { timeout }, label);
   },
   quickClick: async (sel) => {
     await page.waitForSelector(sel, { visible: true, timeout: 5000 });

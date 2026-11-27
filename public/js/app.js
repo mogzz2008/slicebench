@@ -192,6 +192,7 @@ function readFormIntoState() {
 function render(projection, { sound = false } = {}) {
   const { focus, finalStage, warnings, insights, model } = projection;
   const first = focus.series[0];
+  const last = focus.series[focus.series.length - 1];
 
   animateNumber($('[data-testid="hero-from"]'), first?.percent || 0, pctFormat);
   animateNumber($('[data-testid="hero-to"]'), focus.effectivePercent, pctFormat);
@@ -208,6 +209,12 @@ function render(projection, { sound = false } = {}) {
   const headline = insights.find((i) => i.code === 'shuffle-hurts-more' || i.code === 'raise-hurts-more' || i.code === 'cliff-zero' || i.code === 'partial-vest');
   if (headline) footnoteBits.push(headline.title + '.');
   $('[data-testid="hero-footnote"]').textContent = footnoteBits.join(' ');
+  const fromSub = $('[data-testid="hero-from-sub"]');
+  if (fromSub) fromSub.textContent = `${focus.name}, fully diluted`;
+  const toSub = $('[data-testid="hero-to-sub"]');
+  if (toSub) toSub.textContent = `${focus.name}, after the last step`;
+  const toKicker = $('[data-testid="hero-to-kicker"]');
+  if (toKicker) toKicker.textContent = last?.label || 'After the last step';
 
   $('[data-testid="slice-name"]').textContent = focus.name;
   animateNumber($('[data-testid="slice-percent"]'), focus.effectivePercent, pctFormat, 640);
