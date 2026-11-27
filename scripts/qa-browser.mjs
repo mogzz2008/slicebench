@@ -149,6 +149,10 @@ ok('partial-vest insight appears', await page.$('[data-testid="insight-partial-v
 await fill('[data-testid="field-leave"]', '8');
 await page.waitForFunction(() => Number(document.querySelector('[data-testid="slice-percent"]')?.dataset.value) === 0, { timeout: 5000 });
 ok('leaving before the cliff drives the vested slice to 0%', (await sliceValue()) === 0, await sliceText());
+await page.waitForFunction(() => document.querySelector('[data-testid="slice-percent"]')?.textContent.trim() === '0.00%', { timeout: 5000 });
+ok('YOUR GRANT big number reads 0.00% after leave-month 8', (await sliceText()) === '0.00%', await sliceText());
+await new Promise((r) => setTimeout(r, 700));
+ok('YOUR GRANT big number stays 0.00% after the ticker settles', (await sliceText()) === '0.00%', await sliceText());
 ok('cliff-zero insight appears', await page.$('[data-testid="insight-cliff-zero"]'));
 ok('lab heading updates to Leaving before the cliff', (await page.$eval('[data-testid="lab-heading"]', (el) => el.textContent.trim())) === 'Leaving before the cliff');
 

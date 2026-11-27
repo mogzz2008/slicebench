@@ -23,19 +23,29 @@ function reducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+const animGen = new WeakMap();
+
 function animateNumber(el, next, format, duration = 520) {
-  const prev = Number(el.dataset.value || 0);
+  if (!el) return;
+  const raw = el.dataset.value;
+  const prev = raw === undefined || raw === '' ? Number.NaN : Number(raw);
+  const from = Number.isFinite(prev) ? prev : 0;
+  // Always record the target, including 0 after a cliff forfeit.
   el.dataset.value = String(next);
-  if (reducedMotion() || !Number.isFinite(prev) || !Number.isFinite(next)) {
-    el.textContent = format(next);
+  const gen = (animGen.get(el) || 0) + 1;
+  animGen.set(el, gen);
+  const paint = (value) => { el.textContent = format(value); };
+  if (reducedMotion() || !Number.isFinite(next) || from === next) {
+    paint(Number.isFinite(next) ? next : 0);
     return;
   }
   const start = performance.now();
-  const span = next - prev;
+  const span = next - from;
   const step = (t) => {
+    if (animGen.get(el) !== gen) return;
     const u = Math.min(1, (t - start) / duration);
     const eased = 1 - (1 - u) ** 3;
-    el.textContent = format(prev + span * eased);
+    paint(u >= 1 ? next : from + span * eased);
     if (u < 1) requestAnimationFrame(step);
   };
   requestAnimationFrame(step);

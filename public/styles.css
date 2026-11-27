@@ -364,6 +364,9 @@ output { font-family: var(--font-mono); min-width: 3.4em; text-align: right; col
 .focus-dot { accent-color: var(--copper); }
 
 .slice-card {
+  position: sticky;
+  top: 76px;
+  z-index: 4;
   padding: 22px;
   border-radius: 22px;
   background:
@@ -420,6 +423,13 @@ output { font-family: var(--font-mono); min-width: 3.4em; text-align: right; col
   width: 100%;
   margin-top: 4px;
   font-variant-numeric: tabular-nums;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.exit-field input::-webkit-outer-spin-button,
+.exit-field input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 .lab .insights { margin: 0 0 12px; }
 .lab.is-featured-story [data-testid="lab-heading"] { color: var(--teal); }
@@ -488,6 +498,7 @@ output { font-family: var(--font-mono); min-width: 3.4em; text-align: right; col
 
 @media (max-width: 880px) {
   .bench-grid, .hero-stage, .lab-grid, .value-grid { grid-template-columns: 1fr; }
+  .slice-card { position: static; }
   .hero-dial { width: 150px; height: 150px; }
   .founder-row { grid-template-columns: 16px minmax(0, 1fr) auto; }
   .founder-row input[type="number"] { grid-column: 2 / 3; }
