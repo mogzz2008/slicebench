@@ -22,7 +22,11 @@ export function formatMoney(n, { digits = 2, compact = true } = {}) {
 export function formatPercent(fraction, digits = 2) {
   const x = Number(fraction);
   if (!Number.isFinite(x)) return '—';
-  return `${(x * 100).toFixed(digits)}%`;
+  // Add a tiny epsilon so values like 0.075, which are not exact in IEEE
+  // floats, still round half-up the way a person would expect (0.08%).
+  const factor = 10 ** digits;
+  const rounded = Math.round(x * 100 * factor + 1e-9) / factor;
+  return `${rounded.toFixed(digits)}%`;
 }
 
 export function formatShares(n) {
