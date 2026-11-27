@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Slicebench shows what is left of a founding stake or option grant after SAFEs, the option-pool shuffle, and the priced round. All math runs in your browser.">
+  <meta name="theme-color" content="#100e0c">
+  <title>Slicebench — see what's left after the next two rounds</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip" href="#workspace">Skip to the workbench</a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="lamp" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="brand" href="./" data-testid="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Slicebench</span>
+    </a>
+    <nav class="top-actions">
+      <button type="button" class="icon-btn" id="mute-toggle" data-testid="mute-toggle" aria-pressed="true" aria-label="Unmute sound">
+        <span class="mute-label">Sound off</span>
+      </button>
+      <button type="button" class="text-btn" id="sources-open" data-testid="sources-open">Method &amp; sources</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">A cap-table workbench for the garage years</p>
+      <h1 id="hero-title">See what's left <em>after the next two rounds.</em></h1>
+      <p class="lede">
+        A 50/50 founding split is not what you own after a SAFE and a seed.
+        Slicebench converts real term-sheet math — post-money SAFEs, the option-pool shuffle,
+        and standard vesting — into a live picture of your slice, before you sign.
+      </p>
+      <div class="hero-stage" data-testid="hero-stage">
+        <div class="versus">
+          <article class="versus-card">
+            <p class="versus-kicker">In the garage</p>
+            <p class="versus-num" data-testid="hero-from">45.00%</p>
+            <p class="versus-sub">Founder A, fully diluted</p>
+          </article>
+          <p class="versus-vs" aria-hidden="true">→</p>
+          <article class="versus-card is-win">
+            <p class="versus-kicker">After the seed</p>
+            <p class="versus-num" data-testid="hero-to">34.85%</p>
+            <p class="versus-sub">same person, after two raises</p>
+          </article>
+        </div>
+        <div class="hero-dial" data-testid="hero-dial" aria-hidden="true">
+          <div class="dial-ring" id="hero-ring"></div>
+          <div class="dial-core">
+            <span>your slice</span>
+            <strong data-testid="hero-dial-pct">34.85%</strong>
+          </div>
+        </div>
+        <p class="hero-footnote" data-testid="hero-footnote">
+          Load a preset, then pull any lever. The bench updates as you type.
+        </p>
+      </div>
+    </section>
+
+    <section class="presets" aria-label="Sample deals">
+      <p class="presets-label">Try a deal in one click</p>
+      <div class="preset-row" data-testid="preset-row">
+        <button type="button" class="preset-chip is-active" data-testid="preset-yc" data-preset="yc">Two founders, YC batch</button>
+        <button type="button" class="preset-chip" data-testid="preset-shuffle" data-preset="shuffle">The option-pool shuffle</button>
+        <button type="button" class="preset-chip" data-testid="preset-employee" data-preset="employee">Employee, leave at 18 months</button>
+      </div>
+      <p class="preset-blurb" data-testid="preset-blurb"></p>
+    </section>
+
+    <section class="workspace" id="workspace" data-testid="workspace">
+      <div class="bench-head">
+        <h2>On the bench</h2>
+        <div class="bench-actions">
+          <button type="button" class="text-btn" id="share-copy" data-testid="share-copy">Copy share link</button>
+          <button type="button" class="text-btn" id="export-json" data-testid="export-json">Download JSON</button>
+          <button type="button" class="text-btn" id="print-one" data-testid="print-one">Print one-pager</button>
+        </div>
+        <p class="toast" id="toast" data-testid="toast" hidden>Link copied</p>
+      </div>
+
+      <div class="bench-grid">
+        <div class="controls" data-testid="controls">
+          <article class="panel" data-testid="panel-founders">
+            <header class="panel-head">
+              <h3>Founders</h3>
+              <button type="button" class="mini-btn" id="add-founder" data-testid="add-founder">Add founder</button>
+            </header>
+            <p class="hint">Weights are relative. The engine turns them into shares of the issued common around the option pool.</p>
+            <div id="founder-list" data-testid="founder-list"></div>
+            <label class="field">
+              <span>Initial option pool</span>
+              <div class="field-row">
+                <input type="range" id="field-pool" data-testid="field-pool" min="0" max="25" step="0.5" value="10">
+                <output id="field-pool-out" data-testid="field-pool-out">10%</output>
+              </div>
+            </label>
+          </article>
+
+          <article class="panel" data-testid="panel-safes">
+            <header class="panel-head">
+              <h3>SAFEs</h3>
+              <button type="button" class="mini-btn" id="add-safe" data-testid="add-safe">Add SAFE</button>
+            </header>
+            <div id="safe-list" data-testid="safe-list"></div>
+          </article>
+
+          <article class="panel" data-testid="panel-round">
+            <header class="panel-head">
+              <h3>Priced round</h3>
+              <label class="switch">
+                <input type="checkbox" id="round-enabled" data-testid="round-enabled" checked>
+                <span>Include</span>
+              </label>
+            </header>
+            <div class="field-grid" id="round-fields">
+              <label class="field">
+                <span>Name</span>
+                <input type="text" id="field-round-name" data-testid="field-round-name" maxlength="40" value="Seed">
+              </label>
+              <label class="field">
+                <span>New money ($)</span>
+                <input type="number" id="field-round-amount" data-testid="field-round-amount" min="0" step="50000" value="3500000">
+              </label>
+              <label class="field">
+                <span>Pre-money valuation ($)</span>
+                <input type="number" id="field-round-pre" data-testid="field-round-pre" min="0" step="100000" value="17000000">
+              </label>
+              <label class="field">
+                <span>Post-money option-pool target</span>
+                <div class="field-row">
+                  <input type="range" id="field-pool-target" data-testid="field-pool-target" min="0" max="25" step="0.5" value="10">
+                  <output id="field-pool-target-out" data-testid="field-pool-target-out">10%</output>
+                </div>
+              </label>
+            </div>
+          </article>
+
+          <article class="panel" data-testid="panel-grant">
+            <header class="panel-head">
+              <h3>Employee grant</h3>
+              <label class="switch">
+                <input type="checkbox" id="grant-enabled" data-testid="grant-enabled">
+                <span>Include</span>
+              </label>
+            </header>
+            <div class="field-grid" id="grant-fields">
+              <label class="switch span-2" id="grant-focus-wrap">
+                <input type="radio" name="focus" value="grant" id="focus-grant" data-testid="focus-grant">
+                <span>Track this grant as the slice</span>
+              </label>
+              <label class="field">
+                <span>Name</span>
+                <input type="text" id="field-grant-name" data-testid="field-grant-name" maxlength="40" value="Your grant">
+              </label>
+              <label class="field">
+                <span>Grant as % of then FD</span>
+                <input type="number" id="field-grant-pct" data-testid="field-grant-pct" min="0" max="20" step="0.01" value="0.20">
+              </label>
+              <label class="field">
+                <span>Vest (months)</span>
+                <input type="number" id="field-vest" data-testid="field-vest" min="1" max="84" step="1" value="48">
+              </label>
+              <label class="field">
+                <span>Cliff (months)</span>
+                <input type="number" id="field-cliff" data-testid="field-cliff" min="0" max="48" step="1" value="12">
+              </label>
+              <label class="field">
+                <span>If you leave at month</span>
+                <input type="number" id="field-leave" data-testid="field-leave" min="0" max="84" step="1" value="18">
+              </label>
+            </div>
+          </article>
+
+          <article class="panel" data-testid="panel-exits">
+            <h3>Paper value &amp; the job you didn't take</h3>
+            <div class="field-grid">
+              <label class="field">
+                <span>Conservative exit ($)</span>
+                <input type="number" id="field-exit-conservative" data-testid="field-exit-conservative" min="0" step="1000000" value="40000000">
+              </label>
+              <label class="field">
+                <span>Base exit ($)</span>
+                <input type="number" id="field-exit-base" data-testid="field-exit-base" min="0" step="1000000" value="150000000">
+              </label>
+              <label class="field">
+                <span>Breakout exit ($)</span>
+                <input type="number" id="field-exit-breakout" data-testid="field-exit-breakout" min="0" step="1000000" value="800000000">
+              </label>
+              <label class="field">
+                <span>Four-year cash gap ($)</span>
+                <input type="number" id="field-salary" data-testid="field-salary" min="0" step="10000" value="400000">
+              </label>
+            </div>
+            <p class="hint">The cash gap is the extra salary and bonus you might give up versus another job. Paper value ignores taxes, preferences, and exercise cost — it is a comparison tool, not a payday.</p>
+          </article>
+        </div>
+
+        <div class="results" data-testid="results">
+          <article class="slice-card" data-testid="slice-card">
+            <p class="slice-kicker" data-testid="slice-name">Founder A</p>
+            <p class="slice-num" data-testid="slice-percent">34.85%</p>
+            <p class="slice-sub" data-testid="slice-sub">of the company after the last step, fully diluted</p>
+            <div class="slice-path" data-testid="slice-path"></div>
+          </article>
+
+          <article class="panel">
+            <h3>Ownership stack</h3>
+            <div class="stack" data-testid="stack" role="img" aria-label="Ownership stack"></div>
+            <div class="stack-legend" data-testid="stack-legend"></div>
+          </article>
+
+          <article class="panel">
+            <h3>Cap table</h3>
+            <div class="table-wrap">
+              <table class="cap" data-testid="cap-table">
+                <thead>
+                  <tr><th>Holder</th><th>Role</th><th>Shares</th><th>%</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel values-panel">
+            <h3>What the slice is worth on paper</h3>
+            <div class="value-grid">
+              <div>
+                <p class="value-kicker">Conservative</p>
+                <p class="value-num" data-testid="paper-conservative">$13.9M</p>
+              </div>
+              <div class="is-win">
+                <p class="value-kicker">Base</p>
+                <p class="value-num" data-testid="paper-base">$52.3M</p>
+              </div>
+              <div>
+                <p class="value-kicker">Breakout</p>
+                <p class="value-num" data-testid="paper-breakout">$279M</p>
+              </div>
+            </div>
+            <p class="break-even" data-testid="break-even"></p>
+          </article>
+
+          <article class="panel lab" data-testid="lab">
+            <h3>What we tested</h3>
+            <p class="hint">Two edits we ran on this same deal, live. They do not change your bench until you apply one.</p>
+            <div class="lab-grid">
+              <div class="lab-card">
+                <h4>Pool +5 points</h4>
+                <p class="lab-delta" data-testid="lab-pool-delta">—</p>
+                <p class="lab-copy" data-testid="lab-pool-copy"></p>
+                <button type="button" class="mini-btn" id="lab-apply-pool" data-testid="lab-apply-pool">Apply to the bench</button>
+              </div>
+              <div class="lab-card">
+                <h4>Raise $2M more</h4>
+                <p class="lab-delta" data-testid="lab-raise-delta">—</p>
+                <p class="lab-copy" data-testid="lab-raise-copy"></p>
+                <button type="button" class="mini-btn" id="lab-apply-raise" data-testid="lab-apply-raise">Apply to the bench</button>
+              </div>
+            </div>
+          </article>
+
+          <div class="warnings" data-testid="warnings" hidden></div>
+          <ul class="insights" data-testid="insights"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Slicebench is an educational model for Silicon Valley Buildathon 2026. It is not legal, tax, or financing advice. Confirm every number with counsel and a real 409A before you sign.</p>
+    <p>MIT license. All math runs in your browser — nothing is uploaded.</p>
+  </footer>
+
+  <dialog class="drawer" id="sources-drawer" data-testid="sources-drawer">
+    <div class="drawer-inner">
+      <header class="panel-head">
+        <h2>Method &amp; sources</h2>
+        <button type="button" class="mini-btn" id="sources-close" data-testid="sources-close">Close</button>
+      </header>
+      <div class="drawer-body" data-testid="sources-body">
+        <h3>What the model does</h3>
+        <p>Slicebench starts at incorporation with 10,000,000 fully diluted shares. The option pool is reserved as unissued shares. Founder weights split the remaining issued common.</p>
+        <h3>Post-money SAFEs</h3>
+        <p>A post-money SAFE with purchase amount <em>A</em> and cap <em>C</em> is promised <em>A / C</em> of the company immediately after conversion and immediately before new priced-round money or a new pool refresh. That follows the idea behind the standard Y Combinator post-money SAFE (2018 onward). Multiple post-money SAFEs stack their promised percentages.</p>
+        <h3>Pre-money SAFEs</h3>
+        <p>A pre-money SAFE converts as shares = amount × pre-SAFE fully diluted shares / cap, issued simultaneously so pre-money SAFEs do not dilute each other.</p>
+        <h3>Discount versus cap</h3>
+        <p>If a SAFE also has a discount and a priced round is on the bench, conversion uses the lower of the cap price and the discounted round price. The engine iterates once so the discount can be applied against the round's price per share.</p>
+        <h3>The option-pool shuffle</h3>
+        <p>When a priced round sets a post-money option-pool target, new unissued pool shares are created on a pre-money basis so that the unissued pool equals that target of post-money fully diluted shares. New cash investors are not diluted by the refresh. This is the common "option-pool shuffle" in seed term sheets.</p>
+        <h3>Vesting</h3>
+        <p>Employee grants vest monthly over the vest period, with a cliff. Leave before the cliff and nothing has vested. Unvested shares are treated as forfeited for the paper-value math.</p>
+        <h3>What we do not model</h3>
+        <p>Liquidation preferences, pro rata, MFN, unpaid accrued interest on notes, IRS 83(b) elections, AMT, QSBS, 409A strike prices, and secondary sales. Paper value is ownership × assumed exit, with no taxes and no preference stack. Use it to compare shapes, not to bank a number.</p>
+        <h3>Sources</h3>
+        <ul>
+          <li>Y Combinator, <cite>Post-Money SAFE User Guide</cite> and standard post-money SAFE forms.</li>
+          <li>NVCA Model Legal Documents, option-plan and financing term-sheet conventions for pre-money pool increases.</li>
+          <li>Standard four-year / one-year-cliff employee vesting used across U.S. startups.</li>
+        </ul>
+      </div>
+    </div>
+  </dialog>
+
+  <noscript><p class="noscript">Slicebench needs JavaScript to run the cap-table math in your browser.</p></noscript>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

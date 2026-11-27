@@ -1,0 +1,22 @@
+{
+  "name": "slicebench",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Slicebench: see what's left of a founding stake or option grant after SAFEs, the option-pool shuffle, and the priced round. Client-side only. Silicon Valley Buildathon 2026.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/*.mjs\"",
+    "lint": "eslint . --max-warnings=0",
+    "serve": "node scripts/serve.mjs",
+    "qa:browser": "node scripts/qa-browser.mjs",
+    "screens": "node scripts/screens.mjs",
+    "check": "npm run lint && npm test && npm run qa:browser"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "globals": "^15.15.0",
+    "puppeteer-core": "^24.43.1"
+  }
+}
